@@ -1,0 +1,39 @@
+name: Autograding Tests
+'on':
+- push
+- workflow_dispatch
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Run unit tests of Circle
+      id: run-unit-tests-of-circle
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Run unit tests of Circle
+        setup-command: sudo -H pip3 install pytest
+        command: pytest -v
+        timeout: 5
+    - name: Run doctest
+      id: run-doctest
+      uses: education/autograding-command-grader@v1
+      with:
+        test-name: Run doctest
+        setup-command: ''
+        command: python -m doctest
+        timeout: 10
+    - name: Autograding Reporter
+      uses: education/autograding-grading-reporter@v1
+      env:
+        RUN-UNIT-TESTS-OF-CIRCLE_RESULTS: "${{steps.run-unit-tests-of-circle.outputs.result}}"
+        RUN-DOCTEST_RESULTS: "${{steps.run-doctest.outputs.result}}"
+      with:
+        runners: run-unit-tests-of-circle,run-doctest
