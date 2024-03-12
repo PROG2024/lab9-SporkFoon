@@ -3,7 +3,31 @@ import math
 
 
 class Circle:
+    """
+    Represents a geometric circle with a radius.
 
+    Supports circle creation, area calculation, and combining the areas of 
+    two circles to form a new circle whose radius is calculated using the Pythagorean 
+    theorem, taking into account the areas of the two original circles.
+
+    Normal case 
+    - adding areas of two circles:
+    
+    >>> circle1 = Circle(3)
+    >>> circle2 = Circle(4)
+    >>> result_circle = circle1.add_area(circle2)
+    >>> result_circle.get_radius()
+    5.0
+    
+    Illegal case 
+    - attempting to create a circle with a negative radius:
+    
+    >>> Circle(-1)
+    Traceback (most recent call last):
+    ...
+    ValueError: radius must be non-negative
+    
+    """
     def __init__(self, radius):
         """Initialize a circle with given radius.
         
