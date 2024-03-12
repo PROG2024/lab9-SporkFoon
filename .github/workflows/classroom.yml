@@ -28,7 +28,7 @@ jobs:
       with:
         test-name: Run doctest
         setup-command: ''
-        command: python -m doctest
+        command: python -m doctest circle.py
         timeout: 10
     - name: Autograding Reporter
       uses: education/autograding-grading-reporter@v1
