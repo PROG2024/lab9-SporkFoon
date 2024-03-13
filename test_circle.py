@@ -34,7 +34,4 @@ class TestCircle(unittest.TestCase):
 	def test_negative_radius(self):
 		with self.assertRaises(ValueError):
 			c = Circle(-1)
-
-if __name__ == '__main__':
-    unittest.main()
     
