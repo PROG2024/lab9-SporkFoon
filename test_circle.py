@@ -7,29 +7,41 @@ Write unit tests as described in README.md.
 3. Unit test that circle constructor raises exception of radius is negative.
 
 """
-import pytest
+import unittest
 from circle import Circle
 import math
 
-def test_add_area_typical():
-    circle1 = Circle(3)
-    circle2 = Circle(4)
-    result_circle = circle1.add_area(circle2)
-    expected_radius = math.hypot(3, 4)
-    assert result_circle.get_radius() == expected_radius
-    assert math.isclose(result_circle.get_area(), math.pi * expected_radius ** 2)
+class TestCircle(unittest.TestCase):
 
-def test_add_area_edge():
-    circle_zero = Circle(0)
-    circle_non_zero = Circle(4)
-    result_circle1 = circle_zero.add_area(circle_non_zero)
-    result_circle2 = circle_non_zero.add_area(circle_zero)
-    expected_radius = 4
-    assert result_circle1.get_radius() == expected_radius
-    assert math.isclose(result_circle1.get_area(), math.pi * expected_radius ** 2)
-    assert result_circle2.get_radius() == expected_radius
-    assert math.isclose(result_circle2.get_area(), math.pi * expected_radius ** 2)
+    def test_add_area_typical(self):
+        circle1 = Circle(3)
+        circle2 = Circle(4)
+        result_circle = circle1.add_area(circle2)
+        expected_radius = math.hypot(3, 4)
+        self.assertEqual(result_circle.get_radius(), expected_radius,
+                         "The resulting circle does not have the correct radius.")
+        expected_area = math.pi * expected_radius ** 2
+        self.assertAlmostEqual(result_circle.get_area(), expected_area,
+                               msg="The resulting circle does not have the correct area.")
 
-def test_circle_negative_radius_exception():
-    with pytest.raises(ValueError):
-        Circle(-1)
+    def test_add_area_edge_zero_radius(self):
+        circle_zero = Circle(0)
+        circle_non_zero = Circle(4)
+        result_circle_from_zero = circle_zero.add_area(circle_non_zero)
+        result_circle_to_zero = circle_non_zero.add_area(circle_zero)
+        self.assertEqual(result_circle_from_zero.get_radius(), 4,
+                         "The resulting circle's radius is incorrect when starting from zero radius.")
+        self.assertEqual(result_circle_to_zero.get_radius(), 4,
+                         "The resulting circle's radius is incorrect when adding to zero radius.")
+        expected_area = math.pi * 4 ** 2
+        self.assertAlmostEqual(result_circle_from_zero.get_area(), expected_area,
+                               msg="The resulting circle's area is incorrect when starting from zero radius.")
+        self.assertAlmostEqual(result_circle_to_zero.get_area(), expected_area,
+                               msg="The resulting circle's area is incorrect when adding to zero radius.")
+
+    def test_circle_negative_radius_exception(self):
+        with self.assertRaises(ValueError, msg="Creating a circle with a negative radius should raise ValueError."):
+            _ = Circle(-1)
+
+if __name__ == '__main__':
+    unittest.main()
